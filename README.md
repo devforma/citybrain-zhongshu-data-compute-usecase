@@ -1,6 +1,6 @@
 # 使用citybrain中枢和计算平台来加速科研
 
-这篇文章通过一个示例来介绍如何使用cityrain平台的数据和算力来加速科研工作者的研究进程，数据和算力这两大能力分别由citybrain两个核心服务：中枢和算力平台来提供支撑。
+这篇文章通过一个简单的例子来介绍如何使用cityrain平台的数据和算力来加速科研工作者的研究进程，数据和算力这两大能力分别由citybrain两个核心服务：`中枢`和`算力平台`来提供支撑。
 
 
 ## 让我们开始吧
@@ -15,7 +15,7 @@
 
 上传完成后该数据集会在dataset列表中，点击右侧箭头会打开详情页面。在该页面 `Data access` 区域能看到我们上传的文件的 `Data Address`。
 
-`Data Address`是citybrain中枢系统为每一个连接到中枢的data分配的唯一地址，平台用户上传的数据都会注册到中枢并分配这样一个地址。后续通过该地址可以便捷高效的访问数据，你也可以将该地址分享给其他用户。
+`Data Address`是citybrain`中枢系统`为每一个连接到中枢的data分配的唯一地址，平台用户上传的数据都会注册到中枢并分配这样一个地址。后续通过该地址可以便捷高效的访问数据，你也可以将该地址分享给其他用户。
 
 ## 好戏开场
 
@@ -36,32 +36,13 @@ pip3 install --upgrade citybrain-platform
 
     citybrain_platform.api_key = "..."
     ```
-2. 前面通过网站上传的geojson数据已经得到了中枢的data address，输入以下代码来访问该数据
+2. 前面通过网站上传的geojson数据已经得到了`中枢`的`data address`，输入以下代码来访问该数据
     ```python
     citybrain_platform.Data.download(data_address="...", save_file="islands.geojson")
     ```
     该方法通过citybrain中枢系统来解析data address定位数据并将数据内容返回，保存成文件
 
-3. 解析文件内容，提取 `A岛` polygon数据
-    ```python
-    # code to read islands.geojson and extract polygon data of island A
-    ```
-4. 构造SQL语句创建计算任务，该语句查询 `CHELSA` 这个 `Head Data` 下的chelsa_monthly表，查询条件为经纬度在`A岛` polygon范围内且日期为1988年8月的记录数
-    ```python
-    # the following code is just an example, it can't run
-    sql = "SELECT avg(pr) FROM chelsa_monthly WHERE some_func(lat, lon) IN " + A岛polygon
-    job_id = citybrain_platform.Computing.create_job(sql=sql)
-    print(job_id)
-    ```
-5. 查询任务执行状态，任务完成后下载执行结果
-    ```python
-    from citybrain_platform import JobStatus
-
-    job_status = citybrain_platform.Computing.get_job_status(job_id="...")
+3. 通过中枢data address获取到文件内容后，可以进行后续python代码处理数据，并创建sql任务来执行相应的查询，计算任务相关的函数调用可参考github主页README。
     
-    if status.status == JobStatus.TERMINATED:
-        citybrain_platform.Computing.get_job_results(job_id=job_id, filepath="result.csv")
-    ```
-
-该结果也可以通过网站上传，由中枢系统分配唯一data address，后续继续做科研或者分享给其他用户。
+最终的查询结果也可以以文件的形式通过citybrain网站上传，由中枢系统分配唯一data address，后续继续做科研或者分享给其他用户。
 至此该实验已完成，其中涉及到数据和计算的部分分别体现了citybrain中枢系统和算力平台的使用，新的科研之路由此启程！
